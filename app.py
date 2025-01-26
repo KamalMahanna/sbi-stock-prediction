@@ -14,9 +14,11 @@ def next_business_day(today):
     return nse.valid_days(start_date= today+timedelta(1), end_date=today+timedelta(7))[0]
 
 
-model = load_model("./univariate/256_full_1.keras")
+model = load_model("./univariate/model_256.keras")
 scaler = joblib.load("./univariate/scaler.pkl")
-df=yf.download(tickers='SBIN.NS',period="30d")['Close']
+df=yf.download(tickers='SBIN.NS',period="30d")
+df.columns = df.columns.droplevel(1).values
+df=df['Close']
 
 # scaled data, so as to predict by the model
 reshaped_values=scaler.transform(df.values.reshape(-1,1)).reshape(1,30,1)
